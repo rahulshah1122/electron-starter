@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket Generation - HealthPost Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="protected-page">
+  <!-- Navbar -->
+  <nav class="navbar navbar-registration">
+    <div class="container flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <button id="sidebar-toggle" class="btn btn-ghost btn-icon md:hidden">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="text-xl font-bold">Registration Dashboard</h1>
+      </div>
+      <a href="#" class="btn btn-ghost btn-sm logout-btn">
+        <i class="fas fa-sign-out-alt mr-2"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="p-4 space-y-2">
+        <a href="registration-dashboard.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-user-plus mr-2"></i>
+          Patient Registration
+        </a>
+        <a href="registration-tickets.html" class="btn btn-ghost btn-block text-left active">
+          <i class="fas fa-ticket-alt mr-2"></i>
+          Ticket Generation
+        </a>
+        <a href="registration-patients.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-users mr-2"></i>
+          Patient Records
+        </a>
+        <div class="border-t my-4"></div>
+        <a href="index.html" class="btn btn-ghost btn-block text-left text-muted">
+          <i class="fas fa-home mr-2"></i>
+          Back to Home
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="main-content">
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-2xl font-bold">Ticket Generation</h1>
+          <p class="text-muted">Create and manage patient consultation tickets</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Ticket Generation Form -->
+          <div class="card card-registration">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="icon-container icon-container-registration">
+                  <i class="fas fa-plus icon-sm"></i>
+                </span>
+                Create New Ticket
+              </h2>
+              <p class="card-description">Generate a new ticket for patient consultation</p>
+            </div>
+            <form id="ticket-form">
+              <div class="card-content space-y-4">
+                <div class="form-group">
+                  <label for="patientName" class="form-label">
+                    <i class="fas fa-user text-muted mr-1"></i>
+                    Patient Name
+                  </label>
+                  <input type="text" id="patientName" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="patientId" class="form-label">
+                    <i class="fas fa-id-card text-muted mr-1"></i>
+                    Patient ID
+                  </label>
+                  <input type="text" id="patientId" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="doctor" class="form-label">
+                    <i class="fas fa-user-md text-muted mr-1"></i>
+                    Assign Doctor (Optional)
+                  </label>
+                  <select id="doctor" class="form-select">
+                    <option value="" selected>Select a doctor</option>
+                    <option value="1">Dr. Sarah Johnson - General Medicine</option>
+                    <option value="2">Dr. Michael Chen - Pediatrics</option>
+                    <option value="3">Dr. Emily Rodriguez - Cardiology</option>
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="form-group">
+                    <label for="date" class="form-label">
+                      <i class="fas fa-calendar-alt text-muted mr-1"></i>
+                      Date
+                    </label>
+                    <input type="date" id="date" class="form-input" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="time" class="form-label">
+                      <i class="fas fa-clock text-muted mr-1"></i>
+                      Time
+                    </label>
+                    <input type="time" id="time" class="form-input" required>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-registration btn-block">
+                  <i class="fas fa-plus mr-2"></i>
+                  Generate Ticket
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Recent Tickets -->
+          <div class="card card-registration">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="icon-container icon-container-registration">
+                  <i class="fas fa-clock icon-sm"></i>
+                </span>
+                Recent Tickets
+              </h2>
+              <p class="card-description">View and manage recently generated tickets</p>
+            </div>
+            <div class="card-content">
+              <div class="table-container">
+                <table class="table" id="tickets-table">
+                  <thead>
+                    <tr>
+                      <th>Ticket #</th>
+                      <th>Patient</th>
+                      <th class="hidden md:table-cell">Doctor</th>
+                      <th class="hidden md:table-cell">Date/Time</th>
+                      <th>Queue #</th>
+                      <th class="text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Ticket data will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script>
+    // Doctors data
+    const doctors = [
+      { id: 1, name: "Dr. Sarah Johnson", specialty: "General Medicine" },
+      { id: 2, name: "Dr. Michael Chen", specialty: "Pediatrics" },
+      { id: 3, name: "Dr. Emily Rodriguez", specialty: "Cardiology" }
+    ];
+    
+    // Initial tickets data
+    const initialTickets = [
+      { id: "T001", patientName: "John Smith", patientId: "P001", doctor: "Dr. Sarah Johnson", date: "2023-05-15", time: "09:30", queueNumber: 1 },
+      { id: "T002", patientName: "Maria Garcia", patientId: "P002", doctor: "Dr. Michael Chen", date: "2023-05-15", time: "10:00", queueNumber: 2 }
+    ];
+    
+    // Load tickets from storage or use initial data
+    let tickets = HealthPostApp.getFromStorage('healthpost_tickets', initialTickets);
+    
+    // Function to render tickets table
+    function renderTicketsTable(ticketsData) {
+      const tableBody = document.querySelector('#tickets-table tbody');
+      tableBody.innerHTML = '';
+      
+      if (ticketsData.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="6" class="text-center text-muted">No tickets found</td>`;
+        tableBody.appendChild(row);
+        return;
+      }
+      
+      ticketsData.forEach(ticket => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><span class="badge badge-registration badge-outline">${ticket.id}</span></td>
+          <td>
+            <div class="flex flex-col">
+              <span>${ticket.patientName}</span>
+              <span class="text-xs text-muted">${ticket.patientId}</span>
+            </div>
+          </td>
+          <td class="hidden md:table-cell">${ticket.doctor}</td>
+          <td class="hidden md:table-cell">
+            <div class="flex items-center gap-1">
+              <i class="fas fa-calendar-alt text-muted icon-sm"></i>
+              <span class="text-sm">${ticket.date}</span>
+              <i class="fas fa-clock text-muted icon-sm ml-1"></i>
+              <span class="text-sm">${ticket.time}</span>
+            </div>
+          </td>
+          <td><span class="badge badge-registration">${ticket.queueNumber}</span></td>
+          <td class="text-right">
+            <button class="btn btn-ghost btn-sm print-ticket" data-id="${ticket.id}">
+              <i class="fas fa-print"></i>
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      // Add event listeners to print buttons
+      document.querySelectorAll('.print-ticket').forEach(button => {
+        button.addEventListener('click', function() {
+          const ticketId = this.getAttribute('data-id');
+          printTicket(ticketId);
+        });
+      });
+    }
+    
+    // Render initial tickets
+    renderTicketsTable(tickets);
+    
+    // Function to print ticket
+    function printTicket(ticketId) {
+      const ticket = tickets.find(t => t.id === ticketId);
+      if (!ticket) return;
+      
+      // In a real app, this would open a print dialog with formatted ticket
+      alert(`Printing Ticket:\n\nTicket #: ${ticket.id}\nPatient: ${ticket.patientName}\nDoctor: ${ticket.doctor}\nDate: ${ticket.date}\nTime: ${ticket.time}\nQueue #: ${ticket.queueNumber}`);
+    }
+    
+    // Handle form submission
+    document.getElementById('ticket-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Generate a new ticket ID
+      const newTicketId = `T${String(tickets.length + 1).padStart(3, '0')}`;
+      
+      // Get form values
+      const patientName = document.getElementById('patientName').value;
+      const patientId = document.getElementById('patientId').value;
+      const doctorId = document.getElementById('doctor').value;
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+      
+      // Find doctor name
+      const doctor = doctorId ? doctors.find(d => d.id.toString() === doctorId)?.name || "Unassigned" : "Unassigned";
+      
+      // Create new ticket object
+      const newTicket = {
+        id: newTicketId,
+        patientName,
+        patientId,
+        doctor,
+        date,
+        time,
+        queueNumber: tickets.length + 1
+      };
+      
+      // Add to tickets array
+      tickets.push(newTicket);
+      
+      // Save to storage
+      HealthPostApp.saveToStorage('healthpost_tickets', tickets);
+      
+      // Render updated table
+      renderTicketsTable(tickets);
+      
+      // Show success message
+      HealthPostApp.showToast('Success', `Ticket #${newTicketId} for ${patientName} has been created`, 'success');
+      
+      // Reset form
+      this.reset();
+    });
+  </script>
+</body>
+</html>
+

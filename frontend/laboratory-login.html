@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratory Login - HealthPost Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="flex items-center justify-center min-h-screen bg-muted">
+    <div class="card card-laboratory max-w-md w-full">
+      <div class="card-header">
+        <div class="flex justify-center mb-4">
+          <div class="icon-container icon-container-laboratory" style="width: 4rem; height: 4rem;">
+            <i class="fas fa-flask icon-lg"></i>
+          </div>
+        </div>
+        <h1 class="card-title text-center">Laboratory Login</h1>
+        <p class="card-description text-center">
+          Enter your credentials to access the laboratory dashboard
+        </p>
+      </div>
+      <form id="login-form">
+        <div class="card-content space-y-4">
+          <div class="form-group">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" class="form-input" placeholder="laboratory" required>
+          </div>
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-laboratory btn-block">Login</button>
+          <div class="text-center mt-4">
+            <a href="index.html" class="text-sm text-muted">Back to Home</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      if (HealthPostApp.login(username, password, 'laboratory')) {
+        window.location.href = 'laboratory-dashboard.html';
+      } else {
+        HealthPostApp.showToast('Login Failed', 'Invalid credentials. Try laboratory/password', 'error');
+      }
+    });
+  </script>
+</body>
+</html>
+

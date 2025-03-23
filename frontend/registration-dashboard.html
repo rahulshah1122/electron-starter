@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Dashboard - HealthPost Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="protected-page">
+  <!-- Navbar -->
+  <nav class="navbar navbar-registration">
+    <div class="container flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <button id="sidebar-toggle" class="btn btn-ghost btn-icon md:hidden">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="text-xl font-bold">Registration Dashboard</h1>
+      </div>
+      <a href="#" class="btn btn-ghost btn-sm logout-btn">
+        <i class="fas fa-sign-out-alt mr-2"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="p-4 space-y-2">
+        <a href="registration-dashboard.html" class="btn btn-ghost btn-block text-left active">
+          <i class="fas fa-user-plus mr-2"></i>
+          Patient Registration
+        </a>
+        <a href="registration-tickets.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-ticket-alt mr-2"></i>
+          Ticket Generation
+        </a>
+        <a href="registration-patients.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-users mr-2"></i>
+          Patient Records
+        </a>
+        <div class="border-t my-4"></div>
+        <a href="index.html" class="btn btn-ghost btn-block text-left text-muted">
+          <i class="fas fa-home mr-2"></i>
+          Back to Home
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="main-content">
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-2xl font-bold">Patient Registration</h1>
+          <p class="text-muted">Register new patients and manage patient records</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Registration Form -->
+          <div class="card card-registration">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="icon-container icon-container-registration">
+                  <i class="fas fa-user-plus icon-sm"></i>
+                </span>
+                Register New Patient
+              </h2>
+              <p class="card-description">Enter patient details to register in the system</p>
+            </div>
+            <form id="registration-form">
+              <div class="card-content space-y-4">
+                <div class="form-group">
+                  <label for="name" class="form-label">
+                    <i class="fas fa-user text-muted mr-1"></i>
+                    Full Name
+                  </label>
+                  <input type="text" id="name" class="form-input" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="form-group">
+                    <label for="gender" class="form-label">Gender</label>
+                    <select id="gender" class="form-select" required>
+                      <option value="" disabled selected>Select gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="age" class="form-label">Age</label>
+                    <input type="number" id="age" class="form-input" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="contact" class="form-label">
+                    <i class="fas fa-phone text-muted mr-1"></i>
+                    Contact Number
+                  </label>
+                  <input type="text" id="contact" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="email" class="form-label">
+                    <i class="fas fa-envelope text-muted mr-1"></i>
+                    Email (Optional)
+                  </label>
+                  <input type="email" id="email" class="form-input">
+                </div>
+
+                <div class="form-group">
+                  <label for="address" class="form-label">Address (Optional)</label>
+                  <textarea id="address" class="form-textarea"></textarea>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-registration btn-block">
+                  <i class="fas fa-save mr-2"></i>
+                  Register Patient
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Recent Registrations -->
+          <div class="card card-registration">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="icon-container icon-container-registration">
+                  <i class="fas fa-user icon-sm"></i>
+                </span>
+                Recent Registrations
+              </h2>
+              <p class="card-description">View recently registered patients</p>
+              <div class="relative mt-4">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-muted"></i>
+                <input type="search" id="search-patients" class="form-input pl-10" placeholder="Search patients...">
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="table-container">
+                <table class="table" id="patients-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th class="hidden md:table-cell">Gender</th>
+                      <th class="hidden md:table-cell">Age</th>
+                      <th class="hidden md:table-cell">Contact</th>
+                      <th>Reg. Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Patient data will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script>
+    // Initial patient data
+    const initialPatients = [
+      { id: "P001", name: "John Smith", gender: "Male", age: 45, contact: "555-1234", registrationDate: "2023-05-15" },
+      { id: "P002", name: "Maria Garcia", gender: "Female", age: 32, contact: "555-5678", registrationDate: "2023-05-15" }
+    ];
+    
+    // Load patients from storage or use initial data
+    let patients = HealthPostApp.getFromStorage('healthpost_patients', initialPatients);
+    
+    // Function to render patients table
+    function renderPatientsTable(patientsData) {
+      const tableBody = document.querySelector('#patients-table tbody');
+      tableBody.innerHTML = '';
+      
+      if (patientsData.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="6" class="text-center text-muted">No patients found</td>`;
+        tableBody.appendChild(row);
+        return;
+      }
+      
+      patientsData.forEach(patient => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><span class="badge badge-registration badge-outline">${patient.id}</span></td>
+          <td>${patient.name}</td>
+          <td class="hidden md:table-cell">${patient.gender}</td>
+          <td class="hidden md:table-cell">${patient.age}</td>
+          <td class="hidden md:table-cell">${patient.contact}</td>
+          <td>
+            <div class="flex items-center gap-1">
+              <i class="fas fa-calendar-alt text-muted icon-sm"></i>
+              <span class="text-sm">${patient.registrationDate}</span>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+    
+    // Render initial patients
+    renderPatientsTable(patients);
+    
+    // Handle form submission
+    document.getElementById('registration-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Generate a new patient ID
+      const newPatientId = `P${String(patients.length + 1).padStart(3, '0')}`;
+      
+      // Get form values
+      const name = document.getElementById('name').value;
+      const gender = document.getElementById('gender').value;
+      const age = document.getElementById('age').value;
+      const contact = document.getElementById('contact').value;
+      const email = document.getElementById('email').value;
+      const address = document.getElementById('address').value;
+      
+      // Create new patient object
+      const newPatient = {
+        id: newPatientId,
+        name,
+        gender,
+        age: parseInt(age),
+        contact,
+        email,
+        address,
+        registrationDate: new Date().toISOString().split('T')[0]
+      };
+      
+      // Add to patients array
+      patients.push(newPatient);
+      
+      // Save to storage
+      HealthPostApp.saveToStorage('healthpost_patients', patients);
+      
+      // Render updated table
+      renderPatientsTable(patients);
+      
+      // Show success message
+      HealthPostApp.showToast('Success', `Patient ${name} has been registered with ID ${newPatientId}`, 'success');
+      
+      // Reset form
+      this.reset();
+    });
+    
+    // Handle search
+    document.getElementById('search-patients').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      const filteredPatients = patients.filter(patient => 
+        patient.name.toLowerCase().includes(searchTerm) ||
+        patient.id.toLowerCase().includes(searchTerm)
+      );
+      
+      renderPatientsTable(filteredPatients);
+    });
+  </script>
+</body>
+</html>
+

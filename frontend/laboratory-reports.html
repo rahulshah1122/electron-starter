@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratory Reports - HealthPost Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="protected-page">
+  <!-- Navbar -->
+  <nav class="navbar navbar-laboratory">
+    <div class="container flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <button id="sidebar-toggle" class="btn btn-ghost btn-icon md:hidden">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="text-xl font-bold">Laboratory Dashboard</h1>
+      </div>
+      <a href="#" class="btn btn-ghost btn-sm logout-btn">
+        <i class="fas fa-sign-out-alt mr-2"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="p-4 space-y-2">
+        <a href="laboratory-dashboard.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-microscope mr-2"></i>
+          Lab Tests
+        </a>
+        <a href="laboratory-reports.html" class="btn btn-ghost btn-block text-left active">
+          <i class="fas fa-file-medical-alt mr-2"></i>
+          Generate Reports
+        </a>
+        <a href="laboratory-history.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-clipboard-list mr-2"></i>
+          Test History
+        </a>
+        <div class="border-t my-4"></div>
+        <a href="index.html" class="btn btn-ghost btn-block text-left text-muted">
+          <i class="fas fa-home mr-2"></i>
+          Back to Home
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="main-content">
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-2xl font-bold">Laboratory Reports</h1>
+          <p class="text-muted">Generate and manage laboratory test reports</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Generate New Report -->
+          <div class="card card-laboratory">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="icon-container icon-container-laboratory">
+                  <i class="fas fa-file-medical-alt icon-sm"></i>
+                </span>
+                Generate New Report
+              </h2>
+              <p class="card-description">Create a report for a completed test</p>
+            </div>
+            <form id="report-form">
+              <div class="card-content space-y-4">
+                <div class="form-group">
+                  <label for="testId" class="form-label">Select Test</label>
+                  <select id="testId" class="form-select" required>
+                    <option value="" selected disabled>Select a completed test</option>
+                    <!-- Completed tests without reports will be populated here -->
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="results" class="form-label">Test Results</label>
+                  <textarea id="results" class="form-textarea" placeholder="Enter detailed test results here..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label for="conclusion" class="form-label">Conclusion</label>
+                  <textarea id="conclusion" class="form-textarea" placeholder="Enter conclusion and recommendations..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label for="doctor" class="form-label">Doctor/Technician Name</label>
+                  <input type="text" id="doctor" class="form-input" placeholder="Enter name of doctor or lab technician" required>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-laboratory btn-block">
+                  <i class="fas fa-save mr-2"></i>
+                  Generate Report
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <!-- Generated Reports -->
+          <div class="card card-laboratory">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="icon-container icon-container-laboratory">
+                  <i class="fas fa-file-medical-alt icon-sm"></i>
+                </span>
+                Generated Reports
+              </h2>
+              <p class="card-description">View and manage laboratory reports</p>
+              <div class="relative mt-4">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-muted"></i>
+                <input type="search" id="search-reports" class="form-input pl-10" placeholder="Search reports...">
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="table-container">
+                <table class="table" id="reports-table">
+                  <thead>
+                    <tr>
+                      <th>Report ID</th>
+                      <th>Patient</th>
+                      <th class="hidden md:table-cell">Test Type</th>
+                      <th class="hidden md:table-cell">Date</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr id="empty-reports-row">
+                      <td colspan="5" class="text-center text-muted">No reports found</td>
+                    </tr>
+                    <!-- Reports will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Report View Modal -->
+  <div id="report-modal" class="dialog-overlay">
+    <div class="dialog">
+      <div class="dialog-header">
+        <h2 class="dialog-title">
+          <i class="fas fa-file-medical-alt mr-2"></i>
+          Report Details
+        </h2>
+        <p class="dialog-description" id="report-modal-subtitle"></p>
+        <button class="dialog-close" onclick="HealthPostApp.closeModal('report-modal')">&times;</button>
+      </div>
+      <div class="dialog-content" id="report-modal-content">
+        <!-- Report details will be populated here -->
+      </div>
+      <div class="dialog-footer">
+        <button class="btn btn-outline" onclick="HealthPostApp.closeModal('report-modal')">Close</button>
+        <button class="btn btn-laboratory" id="print-report-btn">
+          <i class="fas fa-print mr-2"></i>
+          Print
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script>
+    // Load tests from storage
+    const tests = HealthPostApp.getFromStorage('healthpost_tests', []);
+    
+    // Initial reports data
+    const initialReports = [
+      {
+        id: "R001",
+        testId: "T001",
+        patientName: "John Smith",
+        patientId: "P001",
+        testType: "Complete Blood Count (CBC)",
+        date: "2023-05-16",
+        results: "Hemoglobin: 14.5 g/dL\nRBC: 5.2 million/µL\nWBC: 7,500/µL\nPlatelets: 250,000/µL",
+        conclusion: "Normal blood count values. No abnormalities detected.",
+        doctor: "Dr. Emily Rodriguez"
+      }
+    ];
+    
+    // Load reports from storage or use initial data
+    let reports = HealthPostApp.getFromStorage('healthpost_reports', initialReports);
+    
+    // Function to populate test select options
+    function populateTestOptions() {
+      const selectElement = document.getElementById('testId');
+      
+      // Clear existing options except the first one
+      while (selectElement.options.length > 1) {
+        selectElement.remove(1);
+      }
+      
+      // Get completed tests without reports
+      const completedTests = tests.filter(test => 
+        test.status === "Completed" && 
+        !reports.some(report => report.testId === test.id)
+      );
+      
+      if (completedTests.length === 0) {
+        const option = document.createElement('option');
+        option.value = "none";
+        option.textContent = "No tests available";
+        option.disabled = true;
+        selectElement.appendChild(option);
+        return;
+      }
+      
+      // Add test options
+      completedTests.forEach(test => {
+        const option = document.createElement('option');
+        option.value = test.id;
+        option.textContent = `${test.id} - ${test.patientName} - ${test.testType}`;
+        selectElement.appendChild(option);
+      });
+    }
+    
+    // Initialize test options
+    populateTestOptions();
+    
+    // Function to render reports table
+    function renderReportsTable(reportsData) {
+      const tableBody = document.getElementById('reports-table').querySelector('tbody');
+      const emptyRow = document.getElementById('empty-reports-row');
+      
+      // Show or hide empty row
+      if (reportsData.length === 0) {
+        emptyRow.style.display = '';
+        return;
+      } else {
+        emptyRow.style.display = 'none';
+      }
+      
+      // Clear existing rows except the empty row
+      Array.from(tableBody.children).forEach(child => {
+        if (child !== emptyRow) {
+          child.remove();
+        }
+      });
+      
+      // Add report rows
+      reportsData.forEach(report => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>
+            <span class="badge badge-laboratory badge-outline">${report.id}</span>
+            <div class="text-xs text-muted mt-1">Test: ${report.testId}</div>
+          </td>
+          <td>
+            <div class="flex flex-col">
+              <span>${report.patientName}</span>
+              <span class="text-xs text-muted">${report.patientId}</span>
+            </div>
+          </td>
+          <td class="hidden md:table-cell">${report.testType}</td>
+          <td class="hidden md:table-cell">
+            <div class="flex items-center gap-1">
+              <i class="fas fa-calendar-alt text-muted icon-sm"></i>
+              <span class="text-sm">${report.date}</span>
+            </div>
+          </td>
+          <td class="text-right space-x-1">
+            <button class="btn btn-ghost btn-sm view-report" data-id="${report.id}">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-ghost btn-sm print-report" data-id="${report.id}">
+              <i class="fas fa-print"></i>
+            </button>
+            <button class="btn btn-ghost btn-sm download-report" data-id="${report.id}">
+              <i class="fas fa-download"></i>
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      // Add event listeners
+      document.querySelectorAll('.view-report').forEach(button => {
+        button.addEventListener('click', function() {
+          const reportId = this.getAttribute('data-id');
+          viewReport(reportId);
+        });
+      });
+      
+      document.querySelectorAll('.print-report').forEach(button => {
+        button.addEventListener('click', function() {
+          const reportId = this.getAttribute('data-id');
+          printReport(reportId);
+        });
+      });
+      
+      document.querySelectorAll('.download-report').forEach(button => {
+        button.addEventListener('click', function() {
+          const reportId = this.getAttribute('data-id');
+          downloadReport(reportId);
+        });
+      });
+    }
+    
+    // Render initial reports
+    renderReportsTable(reports);
+    
+    // Function to view a report
+    function viewReport(reportId) {
+      const report = reports.find(r => r.id === reportId);
+      if (!report) return;
+      
+      // Set modal content
+      document.getElementById('report-modal-subtitle').textContent = `${report.id} - ${report.patientName}`;
+      
+      const content = document.getElementById('report-modal-content');
+      content.innerHTML = `
+        <div class="grid grid-cols-2 gap-4 p-4 bg-muted/20 rounded-lg mb-4">
+          <div>
+            <p class="text-sm text-muted flex items-center gap-1">
+              <i class="fas fa-user"></i>
+              Patient
+            </p>
+            <p class="font-medium">${report.patientName}</p>
+            <p class="text-sm text-muted">${report.patientId}</p>
+          </div>
+          <div>
+            <p class="text-sm text-muted flex items-center gap-1">
+              <i class="fas fa-calendar-alt"></i>
+              Date
+            </p>
+            <p class="font-medium">${report.date}</p>
+          </div>
+          <div>
+            <p class="text-sm text-muted flex items-center gap-1">
+              <i class="fas fa-microscope"></i>
+              Test Type
+            </p>
+            <p class="font-medium">${report.testType}</p>
+          </div>
+          <div>
+            <p class="text-sm text-muted flex items-center gap-1">
+              <i class="fas fa-user-md"></i>
+              Doctor/Technician
+            </p>
+            <p class="font-medium">${report.doctor}</p>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <h3 class="font-semibold mb-2">Test Results</h3>
+          <div class="p-3 bg-muted/20 rounded-lg whitespace-pre-line">${report.results}</div>
+        </div>
+        
+        <div>
+          <h3 class="font-semibold mb-2">Conclusion</h3>
+          <div class="p-3 bg-muted/20 rounded-lg whitespace-pre-line">${report.conclusion}</div>
+        </div>
+      `;
+      
+      // Set print button action
+      document.getElementById('print-report-btn').onclick = function() {
+        printReport(reportId);
+        HealthPostApp.closeModal('report-modal');
+      };
+      
+      // Open modal
+      HealthPostApp.openModal('report-modal');
+    }
+    
+    // Function to print a report
+    function printReport(reportId) {
+      const report = reports.find(r => r.id === reportId);
+      if (!report) return;
+      
+      // In a real app, this would open a print dialog with formatted report
+      alert(`Printing Report ${report.id} for ${report.patientName}`);
+    }
+    
+    // Function to download a report
+    function downloadReport(reportId) {
+      const report = reports.find(r => r.id === reportId);
+      if (!report) return;
+      
+      // In a real app, this would download a PDF of the report
+      alert(`Downloading Report ${report.id} for ${report.patientName}`);
+    }
+    
+    // Handle form submission
+    document.getElementById('report-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const testId = document.getElementById('testId').value;
+      if (!testId || testId === "none") {
+        HealthPostApp.showToast('Error', 'Please select a valid test', 'error');
+        return;
+      }
+      
+      // Find the test
+      const test = tests.find(t => t.id === testId);
+      if (!test) return;
+      
+      // Get form values
+      const results = document.getElementById('results').value;
+      const conclusion = document.getElementById('conclusion').value;
+      const doctor = document.getElementById('doctor').value;
+      
+      // Generate a new report ID
+      const newReportId = `R${String(reports.length + 1).padStart(3, '0')}`;
+      
+      // Create new report object
+      const newReport = {
+        id: newReportId,
+        testId: test.id,
+        patientName: test.patientName,
+        patientId: test.patientId,
+        testType: test.testType,
+        date: new Date().toISOString().split('T')[0],
+        results,
+        conclusion,
+        doctor
+      };
+      
+      // Add to reports array
+      reports.push(newReport);
+      
+      // Save to storage
+      HealthPostApp.saveToStorage('healthpost_reports', reports);
+      
+      // Render updated table
+      renderReportsTable(reports);
+      
+      // Update test options
+      populateTestOptions();
+      
+      // Show success message
+      HealthPostApp.showToast('Success', `Report ${newReportId} for ${test.patientName} has been generated`, 'success');
+      
+      // Reset form
+      this.reset();
+    });
+    
+    // Handle search
+    document.getElementById('search-reports').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      const filteredReports = reports.filter(report => 
+        report.patientName.toLowerCase().includes(searchTerm) ||
+        report.id.toLowerCase().includes(searchTerm) ||
+        report.testId.toLowerCase().includes(searchTerm) ||
+        report.testType.toLowerCase().includes(searchTerm)
+      );
+      
+      renderReportsTable(filteredReports);
+    });
+  </script>
+</body>
+</html>
+

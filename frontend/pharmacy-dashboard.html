@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pharmacy Dashboard - HealthPost Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="protected-page">
+  <!-- Navbar -->
+  <nav class="navbar navbar-pharmacy">
+    <div class="container flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <button id="sidebar-toggle" class="btn btn-ghost btn-icon md:hidden">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="text-xl font-bold">Pharmacy Dashboard</h1>
+      </div>
+      <a href="#" class="btn btn-ghost btn-sm logout-btn">
+        <i class="fas fa-sign-out-alt mr-2"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="p-4 space-y-2">
+        <a href="pharmacy-dashboard.html" class="btn btn-ghost btn-block text-left active">
+          <i class="fas fa-cash-register mr-2"></i>
+          Medicine Billing
+        </a>
+        <a href="pharmacy-inventory.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-boxes mr-2"></i>
+          Inventory Management
+        </a>
+        <a href="pharmacy-history.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-history mr-2"></i>
+          Billing History
+        </a>
+        <div class="border-t my-4"></div>
+        <a href="index.html" class="btn btn-ghost btn-block text-left text-muted">
+          <i class="fas fa-home mr-2"></i>
+          Back to Home
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="main-content">
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-2xl font-bold">Medicine Billing</h1>
+          <p class="text-muted">Create and manage medicine bills</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-6">
+            <!-- Patient Information -->
+            <div class="card card-pharmacy">
+              <div class="card-header">
+                <h2 class="card-title">
+                  <span class="icon-container icon-container-pharmacy">
+                    <i class="fas fa-user icon-sm"></i>
+                  </span>
+                  Patient Information
+                </h2>
+              </div>
+              <div class="card-content space-y-4">
+                <div class="form-group">
+                  <label for="patientName" class="form-label">Patient Name</label>
+                  <input type="text" id="patientName" class="form-input">
+                </div>
+                <div class="form-group">
+                  <label for="patientId" class="form-label">Patient ID (Optional)</label>
+                  <input type="text" id="patientId" class="form-input">
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Medicines -->
+            <div class="card card-pharmacy">
+              <div class="card-header">
+                <h2 class="card-title">
+                  <span class="icon-container icon-container-pharmacy">
+                    <i class="fas fa-plus icon-sm"></i>
+                  </span>
+                  Add Medicines
+                </h2>
+                <p class="card-description">Search and add medicines to the current bill</p>
+              </div>
+              <div class="card-content space-y-4">
+                <div class="relative">
+                  <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-muted"></i>
+                  <input type="search" id="search-medicines" class="form-input pl-10" placeholder="Search medicines...">
+                </div>
+
+                <div class="form-group">
+                  <label for="medicine" class="form-label">Select Medicine</label>
+                  <select id="medicine" class="form-select">
+                    <option value="" selected disabled>Select a medicine</option>
+                    <!-- Medicine options will be populated here -->
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="quantity" class="form-label">Quantity</label>
+                  <input type="number" id="quantity" class="form-input" min="1" value="1">
+                </div>
+              </div>
+              <div class="card-footer">
+                <button id="add-to-bill" class="btn btn-pharmacy btn-block">
+                  <i class="fas fa-plus mr-2"></i>
+                  Add to Bill
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current Bill -->
+          <div class="card card-pharmacy">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="icon-container icon-container-pharmacy">
+                  <i class="fas fa-receipt icon-sm"></i>
+                </span>
+                Current Bill
+              </h2>
+              <p class="card-description">Review and finalize the current bill</p>
+            </div>
+            <div class="card-content space-y-4">
+              <div class="table-container">
+                <table class="table" id="bill-items-table">
+                  <thead>
+                    <tr>
+                      <th>Medicine</th>
+                      <th class="text-right">Price</th>
+                      <th class="text-right">Qty</th>
+                      <th class="text-right">Total</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr id="empty-bill-row">
+                      <td colspan="5" class="text-center text-muted">No items added to bill yet</td>
+                    </tr>
+                    <!-- Bill items will be populated here -->
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="flex justify-between items-center pt-4 border-t">
+                <span class="text-lg font-semibold">Total Amount:</span>
+                <span class="text-lg font-bold" id="bill-total">$0.00</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button id="generate-bill" class="btn btn-pharmacy btn-block">
+                <i class="fas fa-print mr-2"></i>
+                Generate & Print Bill
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script>
+    // Available medicines data
+    const availableMedicines = [
+      { id: 1, name: "Paracetamol 500mg", type: "Tablet", price: 5.0, stock: 500 },
+      { id: 2, name: "Amoxicillin 250mg", type: "Capsule", price: 8.5, stock: 300 },
+      { id: 3, name: "Ibuprofen 400mg", type: "Tablet", price: 6.75, stock: 450 },
+      { id: 4, name: "Cetirizine 10mg", type: "Tablet", price: 7.25, stock: 200 },
+      { id: 5, name: "Omeprazole 20mg", type: "Capsule", price: 12.5, stock: 150 }
+    ];
+    
+    // Current bill items
+    let billItems = [];
+    let billTotal = 0;
+    
+    // Populate medicine select options
+    function populateMedicineOptions(medicines) {
+      const selectElement = document.getElementById('medicine');
+      
+      // Clear existing options except the first one
+      while (selectElement.options.length > 1) {
+        selectElement.remove(1);
+      }
+      
+      // Add medicine options
+      medicines.forEach(medicine => {
+        const option = document.createElement('option');
+        option.value = medicine.id;
+        option.textContent = `${medicine.name} - $${medicine.price.toFixed(2)} (${medicine.stock} in stock)`;
+        selectElement.appendChild(option);
+      });
+    }
+    
+    // Initialize medicine options
+    populateMedicineOptions(availableMedicines);
+    
+    // Handle medicine search
+    document.getElementById('search-medicines').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      const filteredMedicines = availableMedicines.filter(medicine => 
+        medicine.name.toLowerCase().includes(searchTerm)
+      );
+      
+      populateMedicineOptions(filteredMedicines);
+    });
+    
+    // Function to update bill total
+    function updateBillTotal() {
+      billTotal = billItems.reduce((sum, item) => sum + item.total, 0);
+      document.getElementById('bill-total').textContent = `$${billTotal.toFixed(2)}`;
+    }
+    
+    // Function to render bill items table
+    function renderBillItems() {
+      const tableBody = document.getElementById('bill-items-table').querySelector('tbody');
+      const emptyRow = document.getElementById('empty-bill-row');
+      
+      // Show or hide empty row
+      if (billItems.length === 0) {
+        emptyRow.style.display = '';
+        return;
+      } else {
+        emptyRow.style.display = 'none';
+      }
+      
+      // Clear existing rows except the empty row
+      Array.from(tableBody.children).forEach(child => {
+        if (child !== emptyRow) {
+          child.remove();
+        }
+      });
+      
+      // Add bill items
+      billItems.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td class="text-right">$${item.price.toFixed(2)}</td>
+          <td class="text-right">${item.quantity}</td>
+          <td class="text-right">$${item.total.toFixed(2)}</td>
+          <td class="text-right">
+            <button class="btn btn-ghost btn-sm remove-item" data-id="${item.id}">
+              <i class="fas fa-trash-alt text-red-500"></i>
+            </button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      // Add event listeners to remove buttons
+      document.querySelectorAll('.remove-item').forEach(button => {
+        button.addEventListener('click', function() {
+          const itemId = parseInt(this.getAttribute('data-id'));
+          removeItem(itemId);
+        });
+      });
+      
+      // Update bill total
+      updateBillTotal();
+    }
+    
+    // Function to add item to bill
+    function addItemToBill() {
+      const medicineId = document.getElementById('medicine').value;
+      if (!medicineId) return;
+      
+      const quantity = parseInt(document.getElementById('quantity').value) || 1;
+      const medicine = availableMedicines.find(m => m.id.toString() === medicineId);
+      
+      if (!medicine) return;
+      
+      const newItem = {
+        id: Date.now(), // Use timestamp as unique ID
+        medicineId: medicine.id,
+        name: medicine.name,
+        price: medicine.price,
+        quantity: quantity,
+        total: medicine.price * quantity
+      };
+      
+      billItems.push(newItem);
+      renderBillItems();
+      
+      // Reset selection
+      document.getElementById('medicine').value = '';
+      document.getElementById('quantity').value = '1';
+      
+      HealthPostApp.showToast('Item Added', `${medicine.name} added to bill`, 'info');
+    }
+    
+    // Function to remove item from bill
+    function removeItem(itemId) {
+      billItems = billItems.filter(item => item.id !== itemId);
+      renderBillItems();
+    }
+    
+    // Add item to bill button
+    document.getElementById('add-to-bill').addEventListener('click', addItemToBill);
+    
+    // Generate bill button
+    document.getElementById('generate-bill').addEventListener('click', function() {
+      const patientName = document.getElementById('patientName').value;
+      const patientId = document.getElementById('patientId').value;
+      
+      if (billItems.length === 0) {
+        HealthPostApp.showToast('Error', 'Please add at least one medicine to the bill', 'error');
+        return;
+      }
+      
+      if (!patientName) {
+        HealthPostApp.showToast('Error', 'Please enter patient name', 'error');
+        return;
+      }
+      
+      // Load existing bills
+      let bills = HealthPostApp.getFromStorage('healthpost_bills', []);
+      
+      // Create new bill
+      const newBill = {
+        id: `B${String(bills.length + 1).padStart(3, '0')}`,
+        patientName,
+        patientId: patientId || 'N/A',
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        totalAmount: billTotal,
+        status: 'Paid',
+        items: [...billItems]
+      };
+      
+      // Add to bills
+      bills.push(newBill);
+      HealthPostApp.saveToStorage('healthpost_bills', bills);
+      
+      // Show success message
+      HealthPostApp.showToast('Success', `Bill #${newBill.id} for ${patientName} has been created`, 'success');
+      
+      // Reset form
+      document.getElementById('patientName').value = '';
+      document.getElementById('patientId').value = '';
+      billItems = [];
+      renderBillItems();
+      
+      // Print bill
+      alert(`Printing Bill #${newBill.id} for ${patientName}\nTotal Amount: $${billTotal.toFixed(2)}`);
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HealthPost Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="flex flex-col min-h-screen">
+    <header class="header">
+      <div class="container">
+        <h1 class="text-2xl font-bold mb-4">HealthPost Management System</h1>
+        <p class="text-xl max-w-2xl">
+          A comprehensive solution for managing health post operations, patient care, and laboratory services
+        </p>
+      </div>
+    </header>
+
+    <main class="flex-1 container py-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 py-8">
+        <!-- Registration Card -->
+        <div class="card card-registration">
+          <div class="card-header">
+            <h2 class="card-title">
+              <span class="icon-container icon-container-registration">
+                <i class="fas fa-user-plus icon"></i>
+              </span>
+              Registration
+            </h2>
+            <p class="card-description">Patient registration and ticket generation</p>
+          </div>
+          <div class="card-content">
+            <div class="space-y-4">
+              <h3 class="text-lg font-medium">Features:</h3>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2">
+                  <span class="icon-container icon-container-registration">
+                    <i class="fas fa-user-plus icon-sm"></i>
+                  </span>
+                  <span>Register new patients</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="icon-container icon-container-registration">
+                    <i class="fas fa-ticket-alt icon-sm"></i>
+                  </span>
+                  <span>Generate consultation tickets</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="icon-container icon-container-registration">
+                    <i class="fas fa-folder-open icon-sm"></i>
+                  </span>
+                  <span>Manage patient records</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a href="registration-login.html" class="btn btn-registration btn-block">
+              Registration Login
+              <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Pharmacy Card -->
+        <div class="card card-pharmacy">
+          <div class="card-header">
+            <h2 class="card-title">
+              <span class="icon-container icon-container-pharmacy">
+                <i class="fas fa-pills icon"></i>
+              </span>
+              Pharmacy
+            </h2>
+            <p class="card-description">Medicine billing and inventory management</p>
+          </div>
+          <div class="card-content">
+            <div class="space-y-4">
+              <h3 class="text-lg font-medium">Features:</h3>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2">
+                  <span class="icon-container icon-container-pharmacy">
+                    <i class="fas fa-cash-register icon-sm"></i>
+                  </span>
+                  <span>Process medicine billing</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="icon-container icon-container-pharmacy">
+                    <i class="fas fa-boxes icon-sm"></i>
+                  </span>
+                  <span>Manage medicine inventory</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="icon-container icon-container-pharmacy">
+                    <i class="fas fa-history icon-sm"></i>
+                  </span>
+                  <span>View billing history</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a href="pharmacy-login.html" class="btn btn-pharmacy btn-block">
+              Pharmacy Login
+              <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Laboratory Card -->
+        <div class="card card-laboratory">
+          <div class="card-header">
+            <h2 class="card-title">
+              <span class="icon-container icon-container-laboratory">
+                <i class="fas fa-flask icon"></i>
+              </span>
+              Laboratory
+            </h2>
+            <p class="card-description">Lab test management and reporting</p>
+          </div>
+          <div class="card-content">
+            <div class="space-y-4">
+              <h3 class="text-lg font-medium">Features:</h3>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2">
+                  <span class="icon-container icon-container-laboratory">
+                    <i class="fas fa-vial icon-sm"></i>
+                  </span>
+                  <span>Record lab test results</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="icon-container icon-container-laboratory">
+                    <i class="fas fa-file-medical-alt icon-sm"></i>
+                  </span>
+                  <span>Generate lab reports</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="icon-container icon-container-laboratory">
+                    <i class="fas fa-clipboard-list icon-sm"></i>
+                  </span>
+                  <span>Manage test history</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a href="laboratory-login.html" class="btn btn-laboratory btn-block">
+              Laboratory Login
+              <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="mb-2">&copy; <span id="current-year"></span> HealthPost Management System</p>
+        <p class="text-sm">A comprehensive solution for healthcare management</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script>
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+

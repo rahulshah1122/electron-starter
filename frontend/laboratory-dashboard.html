@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratory Dashboard - HealthPost Management System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="protected-page">
+  <!-- Navbar -->
+  <nav class="navbar navbar-laboratory">
+    <div class="container flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <button id="sidebar-toggle" class="btn btn-ghost btn-icon md:hidden">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="text-xl font-bold">Laboratory Dashboard</h1>
+      </div>
+      <a href="#" class="btn btn-ghost btn-sm logout-btn">
+        <i class="fas fa-sign-out-alt mr-2"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="p-4 space-y-2">
+        <a href="laboratory-dashboard.html" class="btn btn-ghost btn-block text-left active">
+          <i class="fas fa-microscope mr-2"></i>
+          Lab Tests
+        </a>
+        <a href="laboratory-reports.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-file-medical-alt mr-2"></i>
+          Generate Reports
+        </a>
+        <a href="laboratory-history.html" class="btn btn-ghost btn-block text-left">
+          <i class="fas fa-clipboard-list mr-2"></i>
+          Test History
+        </a>
+        <div class="border-t my-4"></div>
+        <a href="index.html" class="btn btn-ghost btn-block text-left text-muted">
+          <i class="fas fa-home mr-2"></i>
+          Back to Home
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="main-content">
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-2xl font-bold">Laboratory Tests</h1>
+          <p class="text-muted">Register and manage laboratory tests</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Register New Test -->
+          <div class="card card-laboratory">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="icon-container icon-container-laboratory">
+                  <i class="fas fa-microscope icon-sm"></i>
+                </span>
+                Register New Test
+              </h2>
+              <p class="card-description">Enter patient and test details</p>
+            </div>
+            <form id="test-form">
+              <div class="card-content space-y-4">
+                <div class="form-group">
+                  <label for="patientName" class="form-label">
+                    <i class="fas fa-user text-muted mr-1"></i>
+                    Patient Name
+                  </label>
+                  <input type="text" id="patientName" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="patientId" class="form-label">Patient ID</label>
+                  <input type="text" id="patientId" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="testType" class="form-label">Test Type</label>
+                  <select id="testType" class="form-select" required>
+                    <option value="" selected disabled>Select test type</option>
+                    <option value="1">Complete Blood Count (CBC) - $25.00</option>
+                    <option value="2">Blood Glucose - $15.00</option>
+                    <option value="3">Lipid Profile - $35.00</option>
+                    <option value="4">Liver Function Test - $40.00</option>
+                    <option value="5">Kidney Function Test - $45.00</option>
+                    <option value="6">Thyroid Function Test - $50.00</option>
+                    <option value="7">Urine Analysis - $20.00</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="notes" class="form-label">Additional Notes (Optional)</label>
+                  <textarea id="notes" class="form-textarea"></textarea>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button type="submit" class="btn btn-laboratory btn-block">
+                  <i class="fas fa-save mr-2"></i>
+                  Register Test
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <!-- Test Management -->
+          <div class="card card-laboratory">
+            <div class="card-header">
+              <h2 class="card-title">
+                <span class="icon-container icon-container-laboratory">
+                  <i class="fas fa-file-medical-alt icon-sm"></i>
+                </span>
+                Test Management
+              </h2>
+              <p class="card-description">View and manage laboratory tests</p>
+              <div class="relative mt-4">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-muted"></i>
+                <input type="search" id="search-tests" class="form-input pl-10" placeholder="Search tests...">
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="tabs">
+                <div class="tabs-list">
+                  <div class="tab-trigger active" data-tab="pending">Pending Tests</div>
+                  <div class="tab-trigger" data-tab="completed">Completed Tests</div>
+                </div>
+                
+                <div class="tab-content active" data-tab="pending">
+                  <div class="table-container">
+                    <table class="table" id="pending-tests-table">
+                      <thead>
+                        <tr>
+                          <th>Test ID</th>
+                          <th>Patient</th>
+                          <th class="hidden md:table-cell">Test Type</th>
+                          <th class="hidden md:table-cell">Date</th>
+                          <th>Status</th>
+                          <th class="text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr id="empty-pending-row">
+                          <td colspan="6" class="text-center text-muted">No pending tests found</td>
+                        </tr>
+                        <!-- Pending tests will be populated here -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <div class="tab-content" data-tab="completed">
+                  <div class="table-container">
+                    <table class="table" id="completed-tests-table">
+                      <thead>
+                        <tr>
+                          <th>Test ID</th>
+                          <th>Patient</th>
+                          <th class="hidden md:table-cell">Test Type</th>
+                          <th class="hidden md:table-cell">Date</th>
+                          <th>Status</th>
+                          <th class="text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr id="empty-completed-row">
+                          <td colspan="6" class="text-center text-muted">No completed tests found</td>
+                        </tr>
+                        <!-- Completed tests will be populated here -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script>
+    // Test types data
+    const testTypes = [
+      { id: 1, name: "Complete Blood Count (CBC)", price: 25.0 },
+      { id: 2, name: "Blood Glucose", price: 15.0 },
+      { id: 3, name: "Lipid Profile", price: 35.0 },
+      { id: 4, name: "Liver Function Test", price: 40.0 },
+      { id: 5, name: "Kidney Function Test", price: 45.0 },
+      { id: 6, name: "Thyroid Function Test", price: 50.0 },
+      { id: 7, name: "Urine Analysis", price: 20.0 }
+    ];
+    
+    // Initial tests data
+    const initialTests = [
+      { id: "T001", patientName: "John Smith", patientId: "P001", testType: "Complete Blood Count (CBC)", date: "2023-05-15", status: "Completed" },
+      { id: "T002", patientName: "Maria Garcia", patientId: "P002", testType: "Blood Glucose", date: "2023-05-15", status: "Pending" }
+    ];
+    
+    // Load tests from storage or use initial data
+    let tests = HealthPostApp.getFromStorage('healthpost_tests', initialTests);
+    
+    // Function to render tests tables
+    function renderTestsTables() {
+      const pendingTests = tests.filter(test => test.status === "Pending");
+      const completedTests = tests.filter(test => test.status === "Completed");
+      
+      // Render pending tests
+      renderTestsTable(pendingTests, 'pending-tests-table', 'empty-pending-row');
+      
+      // Render completed tests
+      renderTestsTable(completedTests, 'completed-tests-table', 'empty-completed-row');
+    }
+    
+    function renderTestsTable(testsData, tableId, emptyRowId) {
+      const tableBody = document.getElementById(tableId).querySelector('tbody');
+      const emptyRow = document.getElementById(emptyRowId);
+      
+      // Show or hide empty row
+      if (testsData.length === 0) {
+        emptyRow.style.display = '';
+        return;
+      } else {
+        emptyRow.style.display = 'none';
+      }
+      
+      // Clear existing rows except the empty row
+      Array.from(tableBody.children).forEach(child => {
+        if (child !== emptyRow) {
+          child.remove();
+        }
+      });
+      
+      // Add test rows
+      testsData.forEach(test => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><span class="badge badge-laboratory badge-outline">${test.id}</span></td>
+          <td>
+            <div class="flex flex-col">
+              <span>${test.patientName}</span>
+              <span class="text-xs text-muted">${test.patientId}</span>
+            </div>
+          </td>
+          <td class="hidden md:table-cell">${test.testType}</td>
+          <td class="hidden md:table-cell">
+            <div class="flex items-center gap-1">
+              <i class="fas fa-calendar-alt text-muted icon-sm"></i>
+              <span class="text-sm">${test.date}</span>
+            </div>
+          </td>
+          <td>
+            <span class="badge ${test.status === 'Completed' ? 'badge-success' : 'badge-warning'}">
+              ${test.status}
+            </span>
+          </td>
+          <td class="text-right">
+            ${test.status === 'Pending' 
+              ? `<button class="btn btn-ghost btn-sm complete-test" data-id="${test.id}">Complete</button>`
+              : `<button class="btn btn-ghost btn-sm view-report" data-id="${test.id}">View Report</button>`
+            }
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      // Add event listeners
+      document.querySelectorAll('.complete-test').forEach(button => {
+        button.addEventListener('click', function() {
+          const testId = this.getAttribute('data-id');
+          completeTest(testId);
+        });
+      });
+      
+      document.querySelectorAll('.view-report').forEach(button => {
+        button.addEventListener('click', function() {
+          const testId = this.getAttribute('data-id');
+          viewReport(testId);
+        });
+      });
+    }
+    
+    // Render initial tests
+    renderTestsTables();
+    
+    // Function to complete a test
+    function completeTest(testId) {
+      tests = tests.map(test => 
+        test.id === testId ? { ...test, status: "Completed" } : test
+      );
+      
+      // Save to storage
+      HealthPostApp.saveToStorage('healthpost_tests', tests);
+      
+      // Render updated tables
+      renderTestsTables();
+      
+      // Show success message
+      HealthPostApp.showToast('Success', `Test ${testId} has been marked as completed`, 'success');
+    }
+    
+    // Function to view a report
+    function viewReport(testId) {
+      // In a real app, this would open a report view
+      alert(`Viewing report for test ${testId}`);
+    }
+    
+    // Handle form submission
+    document.getElementById('test-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Generate a new test ID
+      const newTestId = `T${String(tests.length + 1).padStart(3, '0')}`;
+      
+      // Get form values
+      const patientName = document.getElementById('patientName').value;
+      const patientId = document.getElementById('patientId').value;
+      const testTypeId = document.getElementById('testType').value;
+      const notes = document.getElementById('notes').value;
+      
+      // Find test type name
+      const testType = testTypes.find(t => t.id.toString() === testTypeId)?.name || "Unknown Test";
+      
+      // Create new test object
+      const newTest = {
+        id: newTestId,
+        patientName,
+        patientId,
+        testType,
+        date: new Date().toISOString().split('T')[0],
+        status: "Pending",
+        notes
+      };
+      
+      // Add to tests array
+      tests.push(newTest);
+      
+      // Save to storage
+      HealthPostApp.saveToStorage('healthpost_tests', tests);
+      
+      // Render updated tables
+      renderTestsTables();
+      
+      // Show success message
+      HealthPostApp.showToast('Success', `Test ${newTestId} for ${patientName} has been registered`, 'success');
+      
+      // Reset form
+      this.reset();
+    });
+    
+    // Handle search
+    document.getElementById('search-tests').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      const filteredTests = tests.filter(test => 
+        test.patientName.toLowerCase().includes(searchTerm) ||
+        test.id.toLowerCase().includes(searchTerm) ||
+        test.testType.toLowerCase().includes(searchTerm)
+      );
+      
+      const pendingTests = filteredTests.filter(test => test.status === "Pending");
+      const completedTests = filteredTests.filter(test => test.status === "Completed");
+      
+      renderTestsTable(pendingTests, 'pending-tests-table', 'empty-pending-row');
+      renderTestsTable(completedTests, 'completed-tests-table', 'empty-completed-row');
+    });
+  </script>
+</body>
+</html>
+
